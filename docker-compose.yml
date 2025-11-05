@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: syvora-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - appnet
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: syvora-web
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+      PORT: 3000
+      NODE_ENV: production
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    # Node-based healthcheck avoids adding curl to image
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000/healthz', (r)=>{ if(r.statusCode!==200) process.exit(1) }).on('error', ()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - appnet
+
+volumes:
+  db-data:
+
+networks:
+  appnet:
+    driver: bridge
+
