@@ -1,0 +1,20 @@
+image:
+  repository: 779846779014.dkr.ecr.us-east-2.amazonaws.com/syvora-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 3000
+
+env:
+  DATABASE_URL: "postgres://postgres:postgres@syvora-db:5432/postgres"
+
+postgres:
+  image: postgres:15
+  username: postgres
+  password: postgres
+  database: postgres
+  port: 5432
+

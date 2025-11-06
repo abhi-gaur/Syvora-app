@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: syvora-db
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.postgres.port }}
+      targetPort: {{ .Values.postgres.port }}
+  selector:
+    app: syvora-db
+
