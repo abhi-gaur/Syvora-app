@@ -1,3 +1,11 @@
+![AWS](https://img.shields.io/badge/Cloud-AWS-orange)
+![Terraform](https://img.shields.io/badge/IaC-Terraform-blueviolet)
+![Helm](https://img.shields.io/badge/Kubernetes-Helm-brightgreen)
+![Monitoring](https://img.shields.io/badge/Monitoring-Prometheus%20%26%20Grafana-red)
+
+
+
+
 # Syvora — Cloud-Native DevOps Demo (EKS + Helm + Monitoring)
 
 
